@@ -1,17 +1,23 @@
 package main
 
 import (
-	"net/http"
+	"server/pkg/reader"
+	"server/pkg/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
+func init() {
+	reader.InitVerses()
+
+}
+
 func main() {
+	const PORT = ":8080"
 	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Hello World",
-		})
-	})
-	r.Run() // listen and serve on 0.0.0.0:8080
+	r.SetTrustedProxies([]string{"192.168.1.2"})
+
+	r.GET("/getTodayVerse", routes.GetTodayVerse)
+
+	r.Run(PORT)
 }
